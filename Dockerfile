@@ -1,8 +1,12 @@
 # Use a base image with OpenResty pre-installed
 FROM openresty/openresty:alpine
 
-# Install PHP 8.3 and required extensions
-RUN apk add --no-cache \
+# Add Edge repositories for latest PHP packages
+RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
+    echo "https://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories
+
+# Update APK and install PHP 8.3 with required extensions
+RUN apk update && apk add --no-cache \
     php8 \
     php8-fpm \
     php8-opcache \
