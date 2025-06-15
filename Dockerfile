@@ -19,10 +19,10 @@ RUN apk add --no-cache \
     php8-dom
 
 # Configure PHP-FPM
-COPY ./php-fpm.conf /etc/php8/php-fpm.conf
+COPY /configs/php-fpm.conf /etc/php8/php-fpm.conf
 
 # Configure OpenResty to proxy PHP requests to PHP-FPM
-COPY ./default.conf /etc/openresty/conf.d/default.conf
+COPY /configs/default.conf /etc/openresty/conf.d/default.conf
 
 # Create directories for OpenResty and PHP-FPM sockets/logs
 RUN mkdir -p /var/run/php-fpm /var/log/php-fpm /var/log/openresty
