@@ -1,38 +1,28 @@
-# Use a base image with OpenResty pre-installed
+# Use OpenResty base image
 FROM openresty/openresty:alpine
 
-# Add Edge repositories for latest PHP packages
-RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
-    echo "https://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories
+# Add repositories for PHP 8.3
+RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories && \
+    echo "https://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
+    echo "https://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories
 
-# Update APK and install PHP 8.3 with required extensions
+# Update and install PHP 8.3 and extensions
 RUN apk update && apk add --no-cache \
-    php8 \
-    php8-fpm \
-    php8-opcache \
-    php8-mysqli \
-    php8-json \
-    php8-session \
-    php8-pdo_mysql \
-    php8-mbstring \
-    php8-xml \
-    php8-gd \
-    php8-curl \
-    php8-intl \
-    php8-ctype \
-    php8-dom
+    php8 php8-fpm php8-opcache php8-mysqli php8-json php8-session \
+    php8-pdo_mysql php8-mbstring php8-xml php8-gd php8-curl php8-intl \
+    php8-ctype php8-dom || (cat /var/log/apk.log && exit 1)
 
 # Configure PHP-FPM
 COPY /configs/php-fpm.conf /etc/php8/php-fpm.conf
 
-# Configure OpenResty to proxy PHP requests to PHP-FPM
+# Configure OpenResty
 COPY /configs/default.conf /etc/openresty/conf.d/default.conf
 
-# Create directories for OpenResty and PHP-FPM sockets/logs
+# Create directories for logs and sockets
 RUN mkdir -p /var/run/php-fpm /var/log/php-fpm /var/log/openresty
 
-# Expose the OpenResty HTTP port
+# Expose the HTTP port
 EXPOSE 80
 
-# Start both OpenResty and PHP-FPM
+# Start services
 CMD ["/bin/sh", "-c", "php-fpm8 && openresty -g 'daemon off;'"]
