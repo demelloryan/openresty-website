@@ -1,10 +1,13 @@
-# Use the official OpenResty base image
-FROM openresty/openresty:latest
+# Use OpenResty with Brotli support (custom or prebuilt image)
+FROM openresty/openresty:alpine
 
-# Copy the gzip-enabled configuration
+# Install Brotli module dependencies (if building OpenResty from source)
+RUN apk add --no-cache brotli
+
+# Copy Brotli-enabled configuration
 COPY configs/default_2.conf /etc/openresty/conf.d/default.conf
 
-# Expose port 80 for HTTP traffic
+# Expose HTTP port
 EXPOSE 80
 
 # Start OpenResty in the foreground
