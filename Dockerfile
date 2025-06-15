@@ -1,5 +1,5 @@
 # Use OpenResty base image
-FROM openresty/openresty:alpine
+FROM openresty/openresty:1.25.3.2-5-alpine-fat
 
 # Add repositories for PHP 8.3
 RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories && \
