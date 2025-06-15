@@ -1,9 +1,8 @@
 # Use the official OpenResty base image
 FROM openresty/openresty:latest
 
-# Copy your OpenResty configuration file (optional)
-# Uncomment and replace 'default.conf' with your configuration file if needed
-# COPY ./default.conf /etc/openresty/conf.d/default.conf
+# Copy the gzip-enabled configuration
+COPY /config/default_2.conf /etc/openresty/conf.d/default.conf
 
 # Expose port 80 for HTTP traffic
 EXPOSE 80
